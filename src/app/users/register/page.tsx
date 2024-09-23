@@ -5,15 +5,26 @@ import { Card, SignUpContainer } from './styled';
 
 export default function SignUp() {
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      username: data.get('username'),
-      password: data.get('password'),
+
+    await fetch("http://127.0.0.1:8080/api/users", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: {
+          name: data.get('name'),
+          email: data.get('email'),
+          username: data.get('username'),
+          password_digest: data.get('password'),
+        }
+      }),
+    }).then((res) => {
+      console.log(res);
+      console.log("New user createdd");
     });
   };
 

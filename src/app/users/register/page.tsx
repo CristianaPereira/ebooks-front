@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography, Stack } from '@mui/material';
 import { Card, SignUpContainer } from './styled';
+import axios from 'axios';
 
 export default function SignUp() {
 
@@ -9,24 +10,20 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    await fetch("http://127.0.0.1:8080/api/users", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user: {
-          name: data.get('name'),
-          email: data.get('email'),
-          username: data.get('username'),
-          password_digest: data.get('password'),
-        }
-      }),
+    await axios.post("http://127.0.0.1:8080/api/users", {
+      user: {
+        name: data.get('name'),
+        email: data.get('email'),
+        username: data.get('username'),
+        password_digest: data.get('password'),
+      }
     }).then((res) => {
       console.log(res);
       console.log("New user createdd");
-    });
-  };
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
 
   return (
     <>

@@ -1,0 +1,18 @@
+type FieldErrors = {
+  [x: string]: string[] | undefined;
+}
+
+type ActionErrors = {
+  form_errors?: FieldErrors;
+}
+
+export type ActionResult = {
+  data?: { user: User };
+  errors?: ActionErrors;
+}
+ 
+type User = {
+  name: string;
+  email: string;
+  username: string;
+}

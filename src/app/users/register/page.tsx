@@ -1,34 +1,16 @@
 "use client"
 import * as React from 'react';
+import { useFormStatus } from "react-dom";
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography, Stack } from '@mui/material';
 import { Card, SignUpContainer } from './styled';
-import axios from 'axios';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
-
+import { NotificationContainer } from 'react-notifications';
+import { handleSubmit } from './actions';
 export default function SignUp() {
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    await axios.post("http://127.0.0.1:8080/api/users", {
-      user: {
-        name: data.get('name'),
-        email: data.get('email'),
-        username: data.get('username'),
-        password: data.get('password'),
-      }
-    }).then(() => { 
-      NotificationManager.success('New account successfully created');
-    }).catch((err) => {
-      console.log(err);
-       NotificationManager.error('It was not possible to create the user');
-    })
-  }
 
   return (
     <>
-      <NotificationContainer/>
+      {/*  TODO: move to a global place to keep it DRY ? */}
+      <NotificationContainer />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Stack
           sx={{
@@ -47,7 +29,7 @@ export default function SignUp() {
             </Typography>
             <Box
               component="form"
-              onSubmit={handleSubmit}
+              action={handleSubmit}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
               <FormControl>
@@ -98,13 +80,7 @@ export default function SignUp() {
                   variant="outlined"
                 />
               </FormControl>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-              >
-                Sign up
-              </Button>
+              <Submit />
               <Typography sx={{ textAlign: 'center' }}>
                 Already have an account?
                 <span>
@@ -124,3 +100,17 @@ export default function SignUp() {
     </>
   );
 }
+
+function Submit() {
+  const { pending } = useFormStatus();
+  return (
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      disabled={pending}
+    >
+      {pending ? "Submitting..." : "Submit"}
+    </Button>
+  );
+} 

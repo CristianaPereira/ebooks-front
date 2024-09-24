@@ -1,10 +1,10 @@
 "use client"
 import * as React from 'react';
 import { useFormStatus, useFormState } from "react-dom";
-import { Box, Button, FormLabel, FormControl, Link, TextField, Typography, Stack } from '@mui/material';
-import { Card, SignUpContainer } from './styled';
+import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from '@mui/material';
 import { NotificationContainer } from 'react-notifications';
 import { handleSubmit } from './actions';
+import { FloatingCardContainer, FloatingCard } from '@/app/_components/Layout/FloatingCards';
 export default function SignUp() {
   const [state, formAction] = useFormState(handleSubmit, {})
   const { form_errors } = state?.errors || {}
@@ -18,96 +18,88 @@ export default function SignUp() {
     <>
       {/*  TODO: move to a global place to keep it DRY ? */}
       <NotificationContainer />
-      <SignUpContainer direction="column" justifyContent="space-between">
-        <Stack
-          sx={{
-            justifyContent: 'center',
-            height: '100dvh',
-            p: 2,
-          }}
-        >
-          <Card variant="outlined">
-            <Typography
-              component="h1"
-              variant="h4"
-              sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-            >
-              Sign up
+      <FloatingCardContainer direction="column" justifyContent="space-between">
+        <FloatingCard variant="outlined">
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+          >
+            Sign up
+          </Typography>
+          <Box
+            component="form"
+            action={formAction}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+          >
+            <FormControl>
+              <FormLabel htmlFor="name">Full name</FormLabel>
+              <TextField
+                autoComplete="name"
+                name="name"
+                required
+                fullWidth
+                id="name"
+                placeholder="Jon Snow"
+                {...getErrorProps('name')}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="username">Username</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="username"
+                placeholder="CR7"
+                name="username"
+                autoComplete="username"
+                variant="outlined"
+                {...getErrorProps('username')}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                placeholder="your@email.com"
+                name="email"
+                autoComplete="email"
+                variant="outlined"
+                {...getErrorProps('email')}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="password">Password</FormLabel>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                placeholder="••••••"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+                variant="outlined"
+                {...getErrorProps('password')}
+              />
+            </FormControl>
+            <Submit />
+            <Typography sx={{ textAlign: 'center' }}>
+              Already have an account?
+              <span>
+                <Link
+                  href="/session/login"
+                  variant="body2"
+                  sx={{ alignSelf: 'center' }}
+                >
+                  Sign in
+                </Link>
+              </span>
             </Typography>
-            <Box
-              component="form"
-              action={formAction}
-              sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-            >
-              <FormControl>
-                <FormLabel htmlFor="name">Full name</FormLabel>
-                <TextField
-                  autoComplete="name"
-                  name="name"
-                  required
-                  fullWidth
-                  id="name"
-                  placeholder="Jon Snow"
-                  {...getErrorProps('name')}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel htmlFor="username">Username</FormLabel>
-                <TextField
-                  required
-                  fullWidth
-                  id="username"
-                  placeholder="CR7"
-                  name="username"
-                  autoComplete="username"
-                  variant="outlined"
-                  {...getErrorProps('username')}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  placeholder="your@email.com"
-                  name="email"
-                  autoComplete="email"
-                  variant="outlined"
-                  {...getErrorProps('email')}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  placeholder="••••••"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  variant="outlined"
-                  {...getErrorProps('password')}
-                />
-              </FormControl>
-              <Submit />
-              <Typography sx={{ textAlign: 'center' }}>
-                Already have an account?
-                <span>
-                  <Link
-                    href="/session/login"
-                    variant="body2"
-                    sx={{ alignSelf: 'center' }}
-                  >
-                    Sign in
-                  </Link>
-                </span>
-              </Typography>
-            </Box>
-          </Card>
-        </Stack>
-      </SignUpContainer>
+          </Box>
+        </FloatingCard>
+      </FloatingCardContainer>
     </>
   );
 }

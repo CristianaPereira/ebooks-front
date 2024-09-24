@@ -1,7 +1,7 @@
 "use client";
 import * as React from 'react';
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from '@mui/material';
-import { Card, SignInContainer } from './styled';
+import { FloatingCardContainer, FloatingCard } from '@/app/_components/Layout/FloatingCards';
 
 export default function SignIn() {
 
@@ -17,8 +17,8 @@ export default function SignIn() {
 
 
   return (
-    <SignInContainer direction="column" justifyContent="space-between">
-      <Card variant="outlined">
+    <FloatingCardContainer direction="column" justifyContent="space-between">
+      <FloatingCard variant="outlined">
         <Typography
           component="h1"
           variant="h4"
@@ -87,7 +87,7 @@ export default function SignIn() {
             </span>
           </Typography>
         </Box>
-      </Card>
-    </SignInContainer>
+      </FloatingCard>
+    </FloatingCardContainer>
   );
 }

@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 
-export const Card = styled(MuiCard)(({ theme }) => ({
+export const FloatingCard = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'center',
@@ -21,7 +21,7 @@ export const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
-export const SignInContainer = styled(Stack)(({ theme }) => ({
+export const FloatingCardContainer = styled(Stack)(({ theme }) => ({
   padding: 20,
   marginTop: '10vh',
   '&::before': {

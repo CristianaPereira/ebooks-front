@@ -1,22 +1,35 @@
 import axios from 'axios';
 import { NotificationManager } from 'react-notifications';
-const handleSubmit = async (data: FormData) => {
+
+export type ActionResult = {
+  errors?: ActionErrors;
+}
+
+export type ActionErrors = {
+  form_errors?: FieldErrors;
+}
+
+export type FieldErrors = {
+  [x: string]: string | undefined;
+}
+
+const handleSubmit = async (_prevState: ActionResult, formData: FormData) => {
   // TODO: use env var
-  const asd = await axios.post("http://127.0.0.1:8080/api/users", {
+  const response = await axios.post("http://127.0.0.1:8080/api/users", {
     user: {
-      name: data.get('name'),
-      email: data.get('email'),
-      username: data.get('username'),
-      password: data.get('password'),
+      name: formData.get('name'),
+      email: formData.get('email'),
+      username: formData.get('username'),
+      password: formData.get('password'),
     }
   }).then(() => {
     NotificationManager.success('New account successfully created');
   }).catch((err) => {
     const { form_errors } = err.response.data;
-    // TODO: handle in form
-    NotificationManager.error(`It was not possible to create the user.\n ${Object.keys(form_errors).map((k: string) => `${k}: ${form_errors[k]}`).join('\n- ')}`);
+    NotificationManager.error('It was not possible to create the user.');
+    return { errors: { form_errors } }
   })
-  console.log(asd)
+  return response
 }
 
 

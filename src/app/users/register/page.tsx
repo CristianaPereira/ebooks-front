@@ -1,11 +1,18 @@
 "use client"
 import * as React from 'react';
-import { useFormStatus } from "react-dom";
+import { useFormStatus, useFormState } from "react-dom";
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography, Stack } from '@mui/material';
 import { Card, SignUpContainer } from './styled';
 import { NotificationContainer } from 'react-notifications';
 import { handleSubmit } from './actions';
 export default function SignUp() {
+  const [state, formAction] = useFormState(handleSubmit, {})
+  const { form_errors } = state?.errors || {}
+
+  const getErrorProps = (fieldName: string) => {
+    const error = form_errors?.[fieldName]
+    return error ? { error: true, helperText: error.join(', ') } : {}
+  }
 
   return (
     <>
@@ -29,7 +36,7 @@ export default function SignUp() {
             </Typography>
             <Box
               component="form"
-              action={handleSubmit}
+              action={formAction}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
               <FormControl>
@@ -41,6 +48,7 @@ export default function SignUp() {
                   fullWidth
                   id="name"
                   placeholder="Jon Snow"
+                  {...getErrorProps('name')}
                 />
               </FormControl>
               <FormControl>
@@ -53,6 +61,7 @@ export default function SignUp() {
                   name="username"
                   autoComplete="username"
                   variant="outlined"
+                  {...getErrorProps('username')}
                 />
               </FormControl>
               <FormControl>
@@ -65,6 +74,7 @@ export default function SignUp() {
                   name="email"
                   autoComplete="email"
                   variant="outlined"
+                  {...getErrorProps('email')}
                 />
               </FormControl>
               <FormControl>
@@ -78,6 +88,7 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                   variant="outlined"
+                  {...getErrorProps('password')}
                 />
               </FormControl>
               <Submit />
@@ -103,6 +114,7 @@ export default function SignUp() {
 
 function Submit() {
   const { pending } = useFormStatus();
+
   return (
     <Button
       type="submit"
@@ -113,4 +125,7 @@ function Submit() {
       {pending ? "Submitting..." : "Submit"}
     </Button>
   );
-} 
+
+}
+
+// Template source: https://github.com/mui/material-ui/tree/v6.1.1/docs/data/material/getting-started/templates/sign-in

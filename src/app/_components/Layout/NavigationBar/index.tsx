@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from "next/link";
 import UserMenu from './UserMenu';
-const pages = [{ name: 'Users', url: 'users' }, { name: 'eBooks', url: 'ebooks' }];
+const pages = [{ name: 'Users', url: '/users' }, { name: 'eBooks', url: '/ebooks' }];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);

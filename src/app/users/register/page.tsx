@@ -16,7 +16,7 @@ export default function SignUp() {
         name: data.get('name'),
         email: data.get('email'),
         username: data.get('username'),
-        password_digest: data.get('password'),
+        password: data.get('password'),
       }
     }).then(() => { 
       NotificationManager.success('New account successfully created');

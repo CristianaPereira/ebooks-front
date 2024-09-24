@@ -1,20 +1,32 @@
-'use client'
-// import { useFormStatus, useFormState } from "react-dom";
+import * as React from 'react';
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-// import { NotificationContainer } from 'react-notifications';
-import { handleSubmit as formAction } from './actions';
+import { useSubmitRequest } from './actions';
 import { FloatingCardContainer, FloatingCard } from '../../../components/Layout/FloatingCards';
 import paths from "../../../routes/paths";
+import { User } from './types';
 export default function SignUp() {
-  // const res =  useFormState(handleSubmit, {})
-  // const [state, formAction] = res
+  const {state, sendRequest} = useSubmitRequest()
+  const { form_errors } = state?.errors || {}
+
+  const getErrorProps = (fieldName: string) => {
+    const error = form_errors?.[fieldName]
+    return error ? { error: true, helperText: error.join(', ') } : {}
+  }
  
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    sendRequest({
+      name: data.get('name'),
+      username: data.get('username'),
+      email: data.get('email'),
+      password: data.get('password'),
+    } as User);
+  } 
 
   return (
     <>
-      {/*  TODO: move to a global place to keep it DRY ? */}
-      {/* <NotificationContainer /> */}
       <FloatingCardContainer direction="column" justifyContent="space-between">
         <FloatingCard variant="outlined">
           <Typography
@@ -24,9 +36,9 @@ export default function SignUp() {
           >
             Sign up
           </Typography>
-          <Box
+            <Box
             component="form"
-            action={formAction}
+            onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
             <FormControl>
@@ -38,18 +50,20 @@ export default function SignUp() {
                 fullWidth
                 id="name"
                 placeholder="Jon Snow"
+                {...getErrorProps('name')}
               />
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="username">Username</FormLabel>
               <TextField
-                required
+     
                 fullWidth
                 id="username"
                 placeholder="CR7"
                 name="username"
                 autoComplete="username"
                 variant="outlined"
+                {...getErrorProps('username')}
               />
             </FormControl>
             <FormControl>
@@ -62,6 +76,7 @@ export default function SignUp() {
                 name="email"
                 autoComplete="email"
                 variant="outlined"
+                {...getErrorProps('email')}
               />
             </FormControl>
             <FormControl>
@@ -75,6 +90,7 @@ export default function SignUp() {
                 id="password"
                 autoComplete="new-password"
                 variant="outlined"
+                {...getErrorProps('password')}
               />
             </FormControl>
             <Submit />

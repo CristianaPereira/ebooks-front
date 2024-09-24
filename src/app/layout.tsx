@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import NavigationBar from "./_components/Layout/NavigationBar";
+import 'react-notifications/lib/notifications.css';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

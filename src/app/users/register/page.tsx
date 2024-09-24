@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography, Stack } from '@mui/material';
 import { Card, SignUpContainer } from './styled';
 import axios from 'axios';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 export default function SignUp() {
 
@@ -17,16 +18,17 @@ export default function SignUp() {
         username: data.get('username'),
         password_digest: data.get('password'),
       }
-    }).then((res) => {
-      console.log(res);
-      console.log("New user createdd");
+    }).then(() => { 
+      NotificationManager.success('New account successfully created');
     }).catch((err) => {
       console.log(err);
+       NotificationManager.error('It was not possible to create the user');
     })
   }
 
   return (
     <>
+      <NotificationContainer/>
       <SignUpContainer direction="column" justifyContent="space-between">
         <Stack
           sx={{

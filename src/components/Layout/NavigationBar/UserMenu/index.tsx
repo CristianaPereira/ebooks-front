@@ -3,8 +3,9 @@ import {Box, IconButton, Typography, Menu, Avatar, Tooltip,MenuItem} from '@mui/
 import {Link} from 'react-router-dom';
 import paths from '../../../../routes/paths';
 import {useSession} from '../../../../hooks/session';
+import useRequest from '../../../../hooks/useRequest';
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard'];
 
 export default function UserMenu() {
   const {logged_in} = useSession()
@@ -16,6 +17,9 @@ export default function UserMenu() {
 }
 
 function LoggedUserMenu() {
+  const { handleLogout} = useSession()
+
+  const { loading: logoutLoading,  sendRequest } = useRequest();
 
   const [anchorElUser, setAnchorElUser] = useState<HTMLElement | null>(null);
 
@@ -26,6 +30,15 @@ function LoggedUserMenu() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const onLogout = async () => {
+    await sendRequest({ method: 'DELETE', url: 'session/logout' }).then(() => {
+      handleLogout();
+    }).catch((err) => {
+      // TODO: handle errors
+      console.log(err);
+    });
   };
 
 
@@ -57,6 +70,10 @@ function LoggedUserMenu() {
           <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
         </MenuItem>
       ))}
+      <MenuItem onClick={onLogout}>
+        {logoutLoading && <Typography>Loading...</Typography>}
+        <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
+      </MenuItem>
     </Menu>
   </Box>
   );

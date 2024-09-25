@@ -1,28 +1,26 @@
-import axios from 'axios';
-import { createContext, useContext, ReactNode, useReducer, Dispatch, useState } from 'react';
+import { createContext, useContext, ReactNode, useReducer, Dispatch, useState, useEffect } from 'react';
+import useRequest from '../useRequest';
 
 interface Session {
   logged_in: boolean;
-  user: {
+  user?: {
     name: string;
+    username: string;
     email: string;
   };
 }
-interface CountAction {
+interface Action {
   type: ActionTypes;
-  payload: Session;
+  payload?: Session;
 }
 
 
 const StateContext = createContext<Session | null>(null);
-const DispatchContext = createContext<Dispatch<CountAction> | null>(null);
+const DispatchContext = createContext<Dispatch<Action> | null>(null);
 
 const initialState: Session = {
   logged_in: false,
-  user: {
-    name: '',
-    email: ''
-  },
+  user: undefined,
 };
 
 
@@ -30,7 +28,7 @@ enum ActionTypes {
   LOGIN = 'LOGIN',
   LOGOUT = 'LOGOUT',
 }
-function sessionReducer(state: Session, action: CountAction): Session {
+function sessionReducer(state: Session, action: Action): Session {
   const { type, payload } = action;
   switch (type) {
     case ActionTypes.LOGIN:
@@ -45,33 +43,32 @@ function sessionReducer(state: Session, action: CountAction): Session {
       return state;
   }
 }
-function Initializer({ children }: { children: ReactNode}) {
+function Initializer({ children }: { children: ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const { handleLogin } = useSession();
+  const { loading, sendRequest } = useRequest();
+
   const fetchWhoAmI = async () => {
     setIsInitialized(true);
-    const response = await axios.get("session/logged_in", { withCredentials: true })
-      .then((res) => {
-        console.log(res); 
-        handleLogin(res.data);
-        return res.data 
-      }).catch((err) => {
-        console.log(err);
-      });
-    return response;
+    sendRequest({ method: 'GET', url: 'session/logged_in' }).then((data) => {
+      handleLogin(data);
+    }).catch(() => {
+      console.log('NOT LOGGED');
+    });
   };
 
-  if(!isInitialized){
-    fetchWhoAmI()
+  useEffect(() => {fetchWhoAmI()}, []);
+
+  if (!isInitialized || loading) {
     return <div>Loading...</div>
   }
-  
-return children
+
+  return children
 }
 
 function SessionProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(sessionReducer,  initialState);
- console.log({state})
+  const [state, dispatch] = useReducer(sessionReducer, initialState);
+  
   return (
     <DispatchContext.Provider value={dispatch}>
       <StateContext.Provider value={state}>
@@ -84,12 +81,12 @@ function SessionProvider({ children }: { children: ReactNode }) {
 
 }
 
- 
+
 
 function useSession() {
   const state = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
-  if (!state || !dispatch ){
+  if (!state || !dispatch) {
     throw new Error('useSession must be used within a SessionProvider');
   }
   const { logged_in, user } = state;
@@ -100,7 +97,13 @@ function useSession() {
     }
   }
   
-  return {logged_in , user,  handleLogin};
+  function handleLogout() {
+    if (dispatch) {
+      dispatch({ type: ActionTypes.LOGOUT, payload: undefined });
+    }
+  }
+
+  return { logged_in, user, handleLogin, handleLogout };
 }
- 
+
 export { SessionProvider, useSession };

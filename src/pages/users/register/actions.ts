@@ -8,17 +8,23 @@ const handleSubmit = async (formData: User): Promise<ActionResult> => {
   // TODO: use env var
   const response = await axios.post("http://127.0.0.1:8080/api/users", {
     user: formData
-  }).then((res) => {
-    showNotification({type: 'success', message: 'New account successfully created'});
-    return { data: res.data };
-  }).catch((err) => {
-    showNotification({type: 'error', message: 'It was not possible to create the user.'});
-    if (err?.response?.data) {
-      const { record_errors } = err.response.data
-      return { errors: { record_errors } }
-    }
-    return { errors: { record_errors: {} } }
-  })
+  },
+    { withCredentials: true }
+  )
+    .then((res) => {
+      if (res.data.status === "created") {
+        console.log("Registration data", res.data)
+      }
+      showNotification({ type: 'success', message: 'New account successfully created' });
+      return { data: res.data };
+    }).catch((err) => {
+      showNotification({ type: 'error', message: 'It was not possible to create the user.' });
+      if (err?.response?.data) {
+        const { record_errors } = err.response.data
+        return { errors: { record_errors } }
+      }
+      return { errors: { record_errors: {} } }
+    })
   return response
 
 }

@@ -2,14 +2,13 @@ import { useState, MouseEvent } from 'react'
 import {Box, IconButton, Typography, Menu, Avatar, Tooltip,MenuItem} from '@mui/material'
 import {Link} from 'react-router-dom';
 import paths from '../../../../routes/paths';
+import {useSession} from '../../../../hooks/session';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function UserMenu() {
-
-  // TODO: Implement login
-  const logged = false; 
-  if(logged) {
+  const {logged_in} = useSession()
+  if(logged_in) {
     return <LoggedUserMenu />
   } else {
     return <Link to={paths.LOGIN} >Login</Link>

@@ -6,6 +6,7 @@ import { FloatingCardContainer, FloatingCard } from '../../../components/Layout/
 import paths from "../../../routes/paths";
 import { User } from './types';
 export default function SignUp() {
+
   const {state, sendRequest} = useSubmitRequest()
   const { record_errors } = state?.errors || {}
 

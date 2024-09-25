@@ -1,22 +1,40 @@
-'use client'
 import * as React from 'react';
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { FloatingCardContainer, FloatingCard } from '../../../components/Layout/FloatingCards';
 import paths from '../../../routes/paths';
+import axios from 'axios';
+import { useSession } from '../../../hooks/session';
 
 export default function SignIn() {
+  const { handleLogin, logged_in} = useSession();
+  const navigate = useNavigate();
 
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const response = await axios.post("session/login", 
+      {
+        email: data.get('email'),
+        password: data.get('password'),
+      },
+      { withCredentials: true })
+      .then((res) => {
+        console.log(res); 
+        handleLogin(res.data); 
+        return res.data 
+      }).catch((err) => {
+        console.log(err);
+      });
+    return response;
+  
+    
+ 
   };
 
+  if(logged_in) {
+    navigate(paths.HOME);
+  }
 
   return (
     <FloatingCardContainer direction="column" justifyContent="space-between">

@@ -3,7 +3,7 @@ type FieldErrors = {
 }
 
 type ActionErrors = {
-  form_errors?: FieldErrors;
+  record_errors?: FieldErrors;
 }
 
 export type ActionResult = {

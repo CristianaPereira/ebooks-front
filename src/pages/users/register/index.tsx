@@ -7,15 +7,16 @@ import paths from "../../../routes/paths";
 import { User } from './types';
 export default function SignUp() {
   const {state, sendRequest} = useSubmitRequest()
-  const { form_errors } = state?.errors || {}
+  const { record_errors } = state?.errors || {}
 
   const getErrorProps = (fieldName: string) => {
-    const error = form_errors?.[fieldName]
+    const error = record_errors?.[fieldName]
     return error ? { error: true, helperText: error.join(', ') } : {}
   }
  
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // TODO: use library to convert form data to json
     const data = new FormData(event.currentTarget);
     sendRequest({
       name: data.get('name'),

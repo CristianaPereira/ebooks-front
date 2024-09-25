@@ -14,10 +14,10 @@ const handleSubmit = async (formData: User): Promise<ActionResult> => {
   }).catch((err) => {
     showNotification({type: 'error', message: 'It was not possible to create the user.'});
     if (err?.response?.data) {
-      const { form_errors } = err.response.data
-      return { errors: { form_errors } }
+      const { record_errors } = err.response.data
+      return { errors: { record_errors } }
     }
-    return { errors: { form_errors: {} } }
+    return { errors: { record_errors: {} } }
   })
   return response
 

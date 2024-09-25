@@ -32,3 +32,5 @@ const showNotification = ({ type, message }: NotifyProps) => {
 };
 
 export default showNotification;
+
+// inpired by : https://dev.to/olabisi09/how-to-build-a-global-notification-system-in-react-4a9n

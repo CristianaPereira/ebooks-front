@@ -17,10 +17,10 @@ export default function SignIn() {
     await sendRequest({ method: 'POST', url: 'session/login', payload: {
       email: data.get('email'),
       password: data.get('password'),
-    } }).then((data) => {
-      handleLogin(data);
-      showNotification({ type: 'success', message: `Wellcome, ${data.user.username}` });
-    }).catch((err) => {
+    } }).then((res) => {
+      handleLogin(res.data);
+      showNotification({ type: 'success', message: `Wellcome, ${res.data.user.username}` });
+    }).catch(() => {
       showNotification({ type: 'error', message: 'It was not possible to login. Please confirm your email and password' });
     });
     

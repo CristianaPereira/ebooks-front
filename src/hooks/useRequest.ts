@@ -2,9 +2,17 @@ import axios from 'axios';
 import { useState } from 'react';
 
 
+type FieldErrors = {
+  [x: string]: string[] | undefined;
+}
+
+type RequestError = {
+  record_errors?: FieldErrors;
+}
+
 function useRequest() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<RequestError>();
   const [data, setData] = useState(null);
 
   const sendRequest = async ({ method, url, payload }: { method: string, url: string, payload?: unknown }) => {
@@ -17,7 +25,11 @@ function useRequest() {
       // TODO: handle errors
       // not logged
       // etc...
-      setError(error);
+      if (error?.response?.data) {
+        setError(error?.response?.data);
+      } else {
+        setError(error);
+      }
     }).finally(() => {
       setLoading(false);
     });

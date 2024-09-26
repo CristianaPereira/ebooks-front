@@ -1,38 +1,34 @@
-import * as React from 'react';
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { FloatingCardContainer, FloatingCard } from '../../../components/Layout/FloatingCards';
 import paths from '../../../routes/paths';
-import axios from 'axios';
 import { useSession } from '../../../hooks/session';
+import showNotification from '../../../components/Notifier';
+import useRequest from '../../../hooks/useRequest';
 
 export default function SignIn() {
-  const { handleLogin, logged_in} = useSession();
+  const { handleLogin, logged_in } = useSession();
   const navigate = useNavigate();
+  const { loading, sendRequest } = useRequest();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const response = await axios.post("session/login", 
-      {
-        email: data.get('email'),
-        password: data.get('password'),
-      },
-      { withCredentials: true })
-      .then((res) => {
-        console.log(res); 
-        handleLogin(res.data); 
-        return res.data 
-      }).catch((err) => {
-        console.log(err);
-      });
-    return response;
-  
+    await sendRequest({ method: 'POST', url: 'session/login', payload: {
+      email: data.get('email'),
+      password: data.get('password'),
+    } }).then((data) => {
+      handleLogin(data);
+      showNotification({ type: 'success', message: `Wellcome, ${data.user.username}` });
+    }).catch((err) => {
+      showNotification({ type: 'error', message: 'It was not possible to login. Please confirm your email and password' });
+    });
     
- 
+  
+
   };
 
-  if(logged_in) {
+  if (logged_in) {
     navigate(paths.HOME);
   }
 
@@ -92,8 +88,9 @@ export default function SignIn() {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={loading}
           >
-            Sign in
+           {loading? 'Loading...' :  'Sign in'}
           </Button>
           <Typography sx={{ textAlign: 'center' }}>
             Do not have an account?

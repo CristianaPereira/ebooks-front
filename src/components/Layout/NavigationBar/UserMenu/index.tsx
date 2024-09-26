@@ -1,15 +1,15 @@
 import { useState, MouseEvent } from 'react'
-import {Box, IconButton, Typography, Menu, Avatar, Tooltip,MenuItem} from '@mui/material'
-import {Link} from 'react-router-dom';
+import { Box, IconButton, Typography, Menu, Avatar, Tooltip, MenuItem } from '@mui/material'
+import { Link } from 'react-router-dom';
 import paths from '../../../../routes/paths';
-import {useSession} from '../../../../hooks/session';
+import { useSession } from '../../../../hooks/session';
 import useRequest from '../../../../hooks/useRequest';
 
 const settings = ['Profile', 'Account', 'Dashboard'];
 
 export default function UserMenu() {
-  const {logged_in} = useSession()
-  if(logged_in) {
+  const { logged_in } = useSession()
+  if (logged_in) {
     return <LoggedUserMenu />
   } else {
     return <Link to={paths.LOGIN} >Login</Link>
@@ -17,9 +17,9 @@ export default function UserMenu() {
 }
 
 function LoggedUserMenu() {
-  const { handleLogout} = useSession()
+  const { handleLogout } = useSession()
 
-  const { loading: logoutLoading,  sendRequest } = useRequest();
+  const { loading: logoutLoading, sendRequest } = useRequest();
 
   const [anchorElUser, setAnchorElUser] = useState<HTMLElement | null>(null);
 
@@ -44,40 +44,40 @@ function LoggedUserMenu() {
 
   return (
     <Box sx={{ flexGrow: 0 }}>
-    <Tooltip title="Open settings">
-      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-      </IconButton>
-    </Tooltip>
-    <Menu
-      sx={{ mt: '45px' }}
-      id="menu-appbar"
-      anchorEl={anchorElUser}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={Boolean(anchorElUser)}
-      onClose={handleCloseUserMenu}
-    >
-      {settings.map((setting) => (
-        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-          <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+      <Tooltip title="Open settings">
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          {/* TODO: after profile pic upload */}
+          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        sx={{ mt: '45px' }}
+        id="menu-appbar"
+        anchorEl={anchorElUser}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(anchorElUser)}
+        onClose={handleCloseUserMenu}
+      >
+        {settings.map((setting) => (
+          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+            <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+          </MenuItem>
+        ))}
+        <MenuItem onClick={onLogout}>
+          {logoutLoading && <Typography>Loading...</Typography>}
+          <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
         </MenuItem>
-      ))}
-      <MenuItem onClick={onLogout}>
-        {logoutLoading && <Typography>Loading...</Typography>}
-        <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
-      </MenuItem>
-    </Menu>
-  </Box>
+      </Menu>
+    </Box>
   );
 }
 
 
- 

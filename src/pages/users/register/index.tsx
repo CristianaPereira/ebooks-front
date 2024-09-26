@@ -1,31 +1,48 @@
-import * as React from 'react';
 import { Box, Button, FormLabel, FormControl, Link, TextField, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-import { useSubmitRequest } from './actions';
-import { FloatingCardContainer, FloatingCard } from '../../../components/Layout/FloatingCards';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+ import { FloatingCardContainer, FloatingCard } from '../../../components/Layout/FloatingCards';
 import paths from "../../../routes/paths";
-import { User } from './types';
-export default function SignUp() {
+import useRequest from '../../../hooks/useRequest';
+import { useSession } from '../../../hooks/session';
+import showNotification from '../../../components/Notifier';
 
-  const {state, sendRequest} = useSubmitRequest()
-  const { record_errors } = state?.errors || {}
+export default function SignUp() {
+  const { handleLogin, logged_in } = useSession()
+  const { loading, error, sendRequest } = useRequest();
+  const navigate = useNavigate();
+
+  const record_errors = error?.record_errors || {}
 
   const getErrorProps = (fieldName: string) => {
     const error = record_errors?.[fieldName]
     return error ? { error: true, helperText: error.join(', ') } : {}
   }
- 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     // TODO: use library to convert form data to json
     const data = new FormData(event.currentTarget);
-    sendRequest({
-      name: data.get('name'),
-      username: data.get('username'),
-      email: data.get('email'),
-      password: data.get('password'),
-    } as User);
-  } 
+
+    await sendRequest({
+      method: 'POST', url: 'api/users', payload: {
+       user: {
+        name: data.get('name'),
+        username: data.get('username'),
+        email: data.get('email'),
+        password: data.get('password'),
+       }
+      }
+    }).then((data) => {
+      handleLogin({ logged_in: true, user: data })
+      showNotification({ type: 'success', message: 'New account successfully created' });
+    }).catch(() => {
+      showNotification({ type: 'error', message: 'It was not possible to create the user.' });
+    });
+  }
+
+  if (logged_in) {
+    navigate(paths.HOME);
+  }
 
   return (
     <>
@@ -38,7 +55,7 @@ export default function SignUp() {
           >
             Sign up
           </Typography>
-            <Box
+          <Box
             component="form"
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
@@ -58,7 +75,7 @@ export default function SignUp() {
             <FormControl>
               <FormLabel htmlFor="username">Username</FormLabel>
               <TextField
-     
+
                 fullWidth
                 id="username"
                 placeholder="CR7"
@@ -95,7 +112,11 @@ export default function SignUp() {
                 {...getErrorProps('password')}
               />
             </FormControl>
-            <Submit />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={loading} > {loading ? "Loading..." : "Submit"} </Button>
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?
               <span>
@@ -114,22 +135,6 @@ export default function SignUp() {
       </FloatingCardContainer>
     </>
   );
-}
-
-function Submit() {
-  const pending  = false
-
-  return (
-    <Button
-      type="submit"
-      fullWidth
-      variant="contained"
-      disabled={pending}
-    >
-      {pending ? "Submitting..." : "Submit"}
-    </Button>
-  );
-
 }
 
 // Template source: https://github.com/mui/material-ui/tree/v6.1.1/docs/data/material/getting-started/templates/sign-in

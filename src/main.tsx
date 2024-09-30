@@ -3,11 +3,12 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import {
-  createBrowserRouter,
+  createBrowserRouter, 
   RouterProvider,
 } from "react-router-dom";
 import Layout from "./routes/layout";
-import Users from './pages/users';
+import UsersList from './pages/users/list';
+import UserDetails from './pages/users/details';
 import Register from './pages/users/register';
 import Ebooks from './pages/ebooks';
 import Home from './pages/home';
@@ -31,11 +32,15 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "users",
-        element: <Users />,
+        path: paths.USERS_PARAMS,
+        element: <UserDetails />,
       },
       {
-        path: "ebooks",
+        path: paths.USERS,
+        element: <UsersList />,
+      },
+      {
+        path: paths.EBOOKS,
         element: <Ebooks />,
       }
     ],

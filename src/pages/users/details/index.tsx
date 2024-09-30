@@ -19,10 +19,7 @@ export default function UserDetail() {
     sendRequest({ method: 'GET', url: `/api/users/${userId}` })
   }, [userId]);
 
-
-  console.log('data', data);
-  console.log('loading', loading);
-  if (!data) return <div>Loading...</div>
+  if (!data || loading) return <div>Loading...</div>
 
   const { username, email, name } = data || {};
   return (

@@ -10,7 +10,8 @@ import Layout from "./routes/layout";
 import UsersList from './pages/users/list';
 import UserDetails from './pages/users/details';
 import Register from './pages/users/register';
-import Ebooks from './pages/ebooks';
+import EbooksList from './pages/ebooks/list';
+import EbooksDetails from './pages/ebooks/details';
 import Home from './pages/home';
 import Login from './pages/session/login';
 import paths from './routes/paths';
@@ -41,8 +42,12 @@ const router = createBrowserRouter([
       },
       {
         path: paths.EBOOKS,
-        element: <Ebooks />,
-      }
+        element: <EbooksList />,
+      },
+      {
+        path: paths.EBOOKS_PARAMS,
+        element: <EbooksDetails />,
+      },
     ],
   },
 ]);

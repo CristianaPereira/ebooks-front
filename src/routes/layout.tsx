@@ -1,13 +1,16 @@
 import { Outlet } from "react-router-dom";
 import NavigationBar from "../components/Layout/NavigationBar";
 import { SessionProvider } from "../hooks/session";
+import { Container } from "@mui/material";
 
 export default function Layout() {
  
   return (
     <SessionProvider>
       <NavigationBar />
-      <Outlet />
+      <Container maxWidth="lg" id="app-content">
+        <Outlet />
+      </Container>
     </SessionProvider>
   );
 }

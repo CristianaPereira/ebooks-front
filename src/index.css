@@ -1,6 +1,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -9,11 +10,14 @@
     --foreground: #ededed;
   }
 }
-
+::-webkit-scrollbar {
+  display: none;
+}
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
 }
 
 body {
@@ -40,3 +44,18 @@ a {
     color-scheme: dark;
   }
 }
+#root{
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  max-height: 100%; 
+}
+
+#app-navbar{
+  flex: 0 1 auto;
+ }
+
+#app-content{
+  flex: 1 1 auto;
+  overflow: auto;
+ }

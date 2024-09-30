@@ -10,10 +10,11 @@ type RequestError = {
   record_errors?: FieldErrors;
 }
 
-function useRequest() {
+// receive data type and use it in data state
+function useRequest<T = unknown>() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<RequestError>();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<T | null>(null);
 
   const sendRequest = async ({ method, url, payload }: { method: string, url: string, payload?: unknown }) => {
     setLoading(true);
